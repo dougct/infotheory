@@ -14,7 +14,6 @@ def entropy(labels, base=2):
   """ Computes entropy of label distribution. """
 
   n_labels = len(labels)
-
   if n_labels <= 1:
     return 0
 
@@ -44,14 +43,13 @@ def entropy_scipy(data, base=2):
 
 
 
-def compute_pi_fano(user_entropy, nr_regions):
-    if user_entropy == 0.0 or nr_regions <= 1:
+def compute_pi_fano(S, N):
+    if S == 0.0 or N <= 1:
         return 1.0
     for p in np.arange(0.001, 1.000, 0.001):
-        #print(p, user_entropy, nr_regions)
         tmp = -p * math.log2(p) - (1 - p) * math.log2(1 - p)
-        pfano = tmp + (1 - p) * math.log2(nr_regions - 1) - user_entropy
-        if pfano <= 0.001:
+        pi_fano = tmp + (1 - p) * math.log2(N - 1) - S
+        if pi_fano <= 0.001:
             return p
     return 0.0
 
@@ -63,7 +61,7 @@ def compute_entropies(df, region_column_name):
     for i, user_checkins in df.groupby(['user_id']):
         visited_regions = list(user_checkins[region_column_name])
 
-        # Remove unkown regions form the list.
+        # Remove unknown regions form the list.
         visited_regions[:] = [item for item in visited_regions if item != -1]
         
         user_entropy = entropy(visited_regions)
@@ -147,7 +145,7 @@ def compute_lzw_entropies(df, region_column_name):
     for i, user_checkins in df.groupby(['user_id']):
         visited_regions = list(user_checkins[region_column_name])
 
-        # Remove unkown regions form the list.
+        # Remove unknown regions form the list.
         visited_regions[:] = [item for item in visited_regions if item != -1]
         
         if not visited_regions:
