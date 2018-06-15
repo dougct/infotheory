@@ -39,17 +39,6 @@ def scipy_entropy(data, base=2):
     return scipy.stats.entropy(p_data, base=base)
 
 
-def compute_pi_fano(S, N):
-    if S == 0.0 or N <= 1:
-        return 1.0
-    for p in np.arange(0.001, 1.000, 0.001):
-        h = -p * math.log2(p) - (1 - p) * math.log2(1 - p)
-        pi_fano = h + (1 - p) * math.log2(N - 1) - S
-        if pi_fano <= 0.001:
-            return p
-    return 0.0
-
-
 
 def binary_entropy(nr_labels, nr_target_labels, base=2):
     p = nr_target_labels / nr_labels
@@ -93,5 +82,17 @@ def lzw_encode(symbols):
 def lzw_entropy(labels):
     _, seq_sizes = lzw_encode(labels)
     return (1 / (sum(seq_sizes) / len(seq_sizes))) * math.log(len(seq_sizes))
+
+
+
+def compute_pi_fano(S, N):
+    if S == 0.0 or N <= 1:
+        return 1.0
+    for p in np.arange(0.001, 1.000, 0.001):
+        h = -p * math.log2(p) - (1 - p) * math.log2(1 - p)
+        pi_fano = h + (1 - p) * math.log2(N - 1) - S
+        if pi_fano <= 0.001:
+            return p
+    return 0.0
 
 
